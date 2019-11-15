@@ -25,7 +25,8 @@ class Reader extends Component {
         this.state = {
             csvData: null,
             nameFile: "",
-            file: "cosota"
+            file: "cosota",
+            URl: "172.19.15.44:5000/"
         }
     }
 
@@ -71,7 +72,7 @@ class Reader extends Component {
         const data = new FormData();
         data.append('file', this.props.filer);
         /** ----------------------Fetch1 Almacena datos en servidor--------------------------- */
-        fetch('http://172.19.15.37:5000/upload', {
+        fetch(this.state.URL+'upload', {
             method: 'POST',
             body: data,
             headers: {
@@ -95,7 +96,7 @@ class Reader extends Component {
                         },
 
                     }
-                    fetch('http://172.19.15.37:5000/send', options)
+                    fetch(this.state.URL+'send', options)
                         .then((response) => response.json())
                         .then((responseJson) => {
 
@@ -116,7 +117,7 @@ class Reader extends Component {
                                 }
                                 /** ---------------------- Fetch3 Consulta el Textract de Aws para digitalizar la Factura --------------------------- */
 
-                                fetch('http://172.19.15.37:5000/textract', options)
+                                fetch(this.state.URL+'textract', options)
                                     .then((response) => response.json())
                                     .then((responseJson) => {
 
@@ -124,7 +125,7 @@ class Reader extends Component {
                                             that.props.cambiarState3("success")
 
 
-                                            fetch('http://172.19.15.37:5000/files', options)
+                                            fetch(this.state.URL+'files', options)
                                                 .then((response) => response.json())
                                                 .then((responseJson) => {
 
