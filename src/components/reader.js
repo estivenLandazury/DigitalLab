@@ -72,7 +72,7 @@ class Reader extends Component {
         const data = new FormData();
         data.append('file', this.props.filer);
         /** ----------------------Fetch1 Almacena datos en servidor--------------------------- */
-        fetch(that.state.URl + 'upload', {
+        fetch('172.19.15.44:5000/upload', {
             method: 'POST',
             body: data,
             headers: {
@@ -96,7 +96,7 @@ class Reader extends Component {
                         },
 
                     }
-                    fetch(that.state.URl + 'send', options)
+                    fetch('172.19.15.44:5000/send', options)
                         .then((response) => response.json())
                         .then((responseJson) => {
 
@@ -117,7 +117,7 @@ class Reader extends Component {
                                 }
                                 /** ---------------------- Fetch3 Consulta el Textract de Aws para digitalizar la Factura --------------------------- */
 
-                                fetch(that.state.URl + 'textract', options)
+                                fetch('172.19.15.44:5000/textract', options)
                                     .then((response) => response.json())
                                     .then((responseJson) => {
 
