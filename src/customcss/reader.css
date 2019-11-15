@@ -1,0 +1,82 @@
+.card-header {
+  background: #1463d8;
+}
+
+h1.Title_principal {
+  color: white;
+  font-size: 141%;
+}
+
+table {
+  border-collapse: inherit;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #1f578e;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.card-title {
+  margin-bottom: 0.75rem;
+  color: #1f578e;
+  font-weight: bold;
+}
+
+.card {
+  border: none;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #1f578e;
+}
+
+h1.TitleTable {
+  color: #1f578e;
+  font-size: 120%;
+  position: le;
+}
+
+h1.h1-Title {
+  color: #565b63;
+  font-size: 126%;
+}
+
+.Container-Titel {
+  display: -webkit-inline-box;
+}
+
+button#consult {
+  margin-left: 15%;
+  margin-top: -5%;
+}
+
+h1.loader {
+  font-size: 100%;
+  color: #1f578e;
+}
+
+.loader2 {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid blue;
+    border-bottom: 16px solid blue;
+    width: 74px;
+    height: 74px;
+    animation: spin 2s linear infinite;
+    margin-left: 47%;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
