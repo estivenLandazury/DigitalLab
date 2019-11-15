@@ -125,7 +125,7 @@ class Reader extends Component {
                                             that.props.cambiarState3("success")
 
 
-                                            fetch(that.state.URl + 'files', options)
+                                            fetch('http://172.19.15.44:5000/files', options)
                                                 .then((response) => response.json())
                                                 .then((responseJson) => {
 
