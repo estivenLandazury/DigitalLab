@@ -1,8 +1,8 @@
 import { createStore } from 'redux'
 const stateInitial = {
     /** Search normal */
-    keyWord: "Hola bb",
-    filer: "",
+    keyWord: "tabla.csv",
+    filer: null,
     nameFile: "",
     csvData: null,
     state1: "",
@@ -10,7 +10,35 @@ const stateInitial = {
     state3: "",
     state4: "",
     encode: "",
-    loader: true
+    table: false,
+    loader: true,
+    fileJson: [
+        {
+            Item: 1,
+            FacturaNro: "melosky",
+            FechaFactura: "",
+            Marca: "",
+            NombreComercial: "",
+            Referencia: "",
+            Tipo: "--",
+            Clase: "--",
+            Modelo: "--",
+            SubPartidaArancelaria: "--",
+            Valor: "--",
+            Unidad: "--",
+            Cantidad: "--",
+            CantidadDeclarar: "--",
+            PesoSistema: "--",
+            Preinspeccion: "--",
+            ConservarDatos: "--",
+            Carpeta: "--",
+            Embarque: "--",
+            CertificadoOrigen: "--",
+            NroRegistro: ""
+        }
+
+    ]
+
 }
 
 
@@ -61,6 +89,19 @@ const reducerSearch = (state = stateInitial, action) => {
         }
 
     }
+    else if (action.type == "Change_state4") {
+        return {
+            ...state,
+            state3: "",
+            state2: "",
+            state1: "",
+            encode: "",
+            state4: action.state4,
+            loader: false
+
+        }
+
+    }
     else if (action.type == "Change_encode") {
         return {
             ...state,
@@ -82,6 +123,23 @@ const reducerSearch = (state = stateInitial, action) => {
             state1: "",
             state4: "",
             loader: action.loader
+        }
+
+    }
+
+    else if (action.type == "File_Table") {
+        console.log("desde redux file table")
+        return {
+            ...state,
+            fileJson: action.input
+        }
+
+    }
+
+    else if (action.type == "Enable_Table") {
+        return {
+            ...state,
+            table: action.input
         }
 
     }

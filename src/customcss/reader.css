@@ -1,5 +1,9 @@
 .card-header {
-  background: #1463d8;
+  background: #4285f4 !important;
+}
+
+div#butones {
+  margin-right: 35%;
 }
 
 h1.Title_principal {
@@ -71,29 +75,37 @@ h1.loader {
   margin-left: 47%;
 }
 
+h1.filter-text {
+  font-size: 120%;
+  font-weight: bold;
+}
+
+input#sear-iput {
+  width: auto;
+}
+
+.row {
+  float: right;
+}
 
 @media (max-width: 2048px) {
   button#consult {
     margin-left: 11%;
     margin-top: -64px;
   }
-
 }
-
 
 @media (max-width: 1366px) {
   button#consult {
-    margin-left: 15%;
-    margin-top: -66px;
+    margin-left: 21%;
+    margin-top: -78px;
   }
-
 }
 
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
   }
-
   100% {
     -webkit-transform: rotate(360deg);
   }
@@ -103,7 +115,6 @@ h1.loader {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }

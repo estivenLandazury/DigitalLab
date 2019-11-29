@@ -6,6 +6,20 @@ import { CSVLink } from "react-csv"
 
 import { connect } from 'react-redux';
 import { Line, Circle } from 'rc-progress';
+import Product from './product'
+import PDFViewer from 'pdf-viewer-reactjs'
+import { MobilePDFReader } from 'reactjs-pdf-reader';
+import { Document, Page } from 'react-pdf'
+
+
+/* --------   mdreact ---------*/
+import "bootstrap-css-only/css/bootstrap.min.css";
+import "mdbreact/dist/css/mdb.css";
+
+import { MDBCard, MDBCardHeader, MDBCardBody, MDBTableEditable, MDBDataTable } from "mdbreact";
+import { cellEditFactory, BootstrapTable } from 'react-bootstrap-table2-editor';
+/* --------   mdreact ---------*/
+
 
 
 
@@ -26,16 +40,27 @@ class Reader extends Component {
             csvData: null,
             nameFile: "",
             file: "cosota",
-            URl: "http://172.19.15.50:5000/"
+            URl: "http://172.19.15.35:5000/",
+            table: false,
+            numPages: null,
+            pageNumber: 1
         }
+
+
+    }
+
+    onDocumentLoadSuccess = ({ numPages }) => {
+        this.setState({ numPages });
     }
 
     componentDidMount() {
+        console.log(React.version + "vv00")
         let val = "VGFibGUNCkN1c3RvbWVyIFBPIE5PLiAsVmVzc2VsIE5hbWUgLFBheW1lbnQgVGVybSAsLER1ZSAsRGF0ZSAsKG1tL2RkL3l5eXkpICwsRGF0ZSBTaGlwcGVkIA0KNjUyMTMgLEpQTyBDQVBSSUNPUk5VUyBWLjkyMVMgLEIvTCA5MCBEQVlTICwsLDA4LzI4LzIwMTkgLCwsMDUvMzAvMjAxOSANCk1hcmtzICYgTm9zLiAsRGVzY3JpcHRpb24gLCxRdWFudGl0eSAsLFVuaXQgLFVuaXQgUHJpY2UgLCxFeHQuIFByaWNlIA0KLCwsLCwsLCxVLlMuRE9MTEFSUyANCiwsLCwsLCwsDQpJTlZFU0EgQ1JBIDQ4ICwiUE9MWVZJTllMIEFMQ09IT0wgIiJLVVJBUkFZICIsIlBPVkFMIiIgIiwsLCwsLA0KTk8gMjYgU1VSIDE4MSAsLCwsLCwsLA0KT0YuMzE0QSAsRVhDRVZBTCBSUy0yMTE3ICggLDE1MCBCQUdTICwsIjMsNzUwICIsS0cgLCQ1LjAwICwsIjE4LDc1MC4wMCAiDQoiRVZOSUdBRE8sICIsLCwsLCwsLA0KQU5USU9RVUlBICwsLCwsLCwsDQpDT0xPTUJJQSAsLCwsLCwsLA0KU1VSIEFNRVJJQ0EgLCwsLCwsLCwNCkJZIFNFQSBGSU5BTCAsLCwsLCwsLA0KREVTVElOQVRJT04gLCwsLCwsLCwNCkNBUlRBR0VOQSBQT1JUICwsLCwsLCwsDQosUEFDS0lORzogMjUgS0dTIC8gQkFHICggLDE1MCBCQUdTICwsLCwsLA0KLENPVU5UUlkgT0YgT1JJR0lOOiBVU0EgLCwsLCwsLA0KLCwsLCwsLCwNCiwsLCwsLCwsDQosLCwsLCwsLA0KLCwsLCwsLCwNCiwsRk9CIFZBTFVFOiAsLCwsLCwiJDE4LDc1MC4wMCAiDQosLCwsLCwsLA0KLCwsLCwsLCwNCg0KDQpUYWJsZQ0KRGF0ZSAobW0vZGQveXl5eSkgLDA1LzMwLzIwMTkgDQosDQosDQosDQpDb250cmFjdCBOby4gLEZYODIwMiANCg0KDQo="
         let vt = atob(val)
-
-        console.log(val)
-        console.log(vt)
+        /** 
+                console.log(val)
+                console.log(vt)
+                */
     }
 
 
@@ -44,6 +69,11 @@ class Reader extends Component {
     handleFiles = files => {
 
         var reader = new FileReader();
+        this.setState({
+
+            file: files[0]
+        })
+        console.log("files    " + files + "  " + files[0])
         this.props.cambiarFile(files[0], files[0].name)
 
         reader.onload = (e) => {
@@ -65,12 +95,34 @@ class Reader extends Component {
 
     }
 
+    prueba() {
+        const that = this
+        const data = JSON.stringify({ "name": "ELDORADOFACTURA.pdf" })
+        fetch("http://172.19.15.35:5000/generateTable", {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        }).then((response) => response.json())
+            .then(function (responseJson) {
+                that.props.cambiarFileTable(responseJson)
+                console.log(responseJson)
+            }).catch(error => console.log(error))
+
+        console.log("holaa")
+    }
+
 
     sendServer() {
         const that = this
 
         const data = new FormData();
         data.append('file', this.props.filer);
+        that.props.habilitarTable(false)
+
         /** ----------------------Fetch1 Almacena datos en servidor--------------------------- */
         fetch(that.state.URl + 'upload', {
             method: 'POST',
@@ -125,20 +177,16 @@ class Reader extends Component {
                                             that.props.cambiarState3("success")
 
 
-                                            fetch(that.state.URl + 'files', options)
+                                            fetch(that.state.URl + 'generateTable', options)
                                                 .then((response) => response.json())
                                                 .then((responseJson) => {
+                                                    that.props.cambiarState4("success")
 
-                                                    if (responseJson["encoded"] !== "") {
-
-                                                        let vt = atob(responseJson["encoded"])
-
-                                                        that.props.cambiarEncode(vt, "success")
+                                                    that.props.cambiarFileTable(responseJson)
+                                                    that.props.habilitarTable(true)
 
 
-                                                        console.log(responseJson["encoded"])
 
-                                                    }
 
 
                                                 }).catch(error => console.log(error))
@@ -227,6 +275,52 @@ class Reader extends Component {
         this.props.cambiarLoader("")
     }
 
+    table() {
+
+        if (this.props.table === true) {
+            return <div>
+                <div className="Container-Titel">
+                    <h1 className="TitleTable"> Download Table: </h1>
+                    <CSVLink data={this.props.fileJson} separator={";"} filename={this.props.nameFile.replace(".pdf", ".csv")}
+                    >
+
+                        <h1 className="h1-Title"> {this.props.nameFile.replace(".pdf", ".csv")}</h1>
+                    </CSVLink>
+                </div>
+                <Product></Product>
+            </div>
+        }
+
+        if (this.props.table === false) {
+            return <div> </div>
+
+        }
+
+    }
+
+
+    viewFile() {
+
+        if (this.props.filer !== null) {
+            return <div>
+                <Document
+                    file={this.state.file}
+                    onLoadSuccess={this.onDocumentLoadSuccess}
+                >
+                    <Page pageNumber={this.state.pageNumber} />
+                </Document>
+                <p>Page {this.state.pageNumber} of {this.state.numPages}</p>
+            </div>
+
+        } else if (this.props.filer !== null) {
+            return <div> </div>
+        }
+
+
+    }
+
+
+
 
 
 
@@ -258,9 +352,15 @@ class Reader extends Component {
   */
 
         const sampleData = ``;
+
+
         return (
 
+
+
             <div >
+
+
 
                 <div className="card">
                     <div className="card-header">
@@ -272,17 +372,22 @@ class Reader extends Component {
                         <p className="card-text">
                             Our digitization service is a good ally to launch a global electronic invoice project.</p>
 
-                        <ReactFileReader
-                            multipleFiles={false}
-                            fileTypes={[".pdf,.csv,.jpg,.png"]}
-                            handleFiles={this.handleFiles}>
-                            <button className='btn btn-primary'>Upload</button>
-                        </ReactFileReader>
+                    </div>
+                    <div className="container">
+                        <div className="row" id="butones">
+                            <div className="col-sm">
+                                <ReactFileReader
+                                    multipleFiles={false}
+                                    fileTypes={[".pdf,.csv,.jpg,.png"]}
+                                    handleFiles={this.handleFiles}>
+                                    <button className='btn btn-primary'>Upload</button>
+                                </ReactFileReader>
+                            </div>
+                            <div className="col-sm">
+                                <button className='btn btn-primary' onClick={this.sendServer.bind(this)}>consultar</button>
+                            </div>
 
-
-
-                        <button className='btn btn-primary' id="consult" onClick={this.sendServer.bind(this)}>consultar</button>
-
+                        </div>
                     </div>
 
 
@@ -291,26 +396,39 @@ class Reader extends Component {
 
                 {this.loaderbar()}
 
-
                 <div className="Container-Titel">
-                    <h1 className="TitleTable"> The digitized file is (Download): </h1>
-                    <CSVLink data={"" + this.state.csvData} separator={";"} filename={this.props.nameFile}
-                    >
-
-                        <h1 className="h1-Title"> {this.props.nameFile}</h1>
-                    </CSVLink>
+                    <h1 className="TitleTable"> The digitized file is :{this.props.nameFile} </h1>
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
                 <div className="container center-h center-v">
+                    <br>
+                    </br>
+                    <br>
+                    </br>
 
-                    <CsvToHtmlTable
-                        data={sampleData || this.props.encode}
-                        csvDelimiter=","
-                        tableClassName="table table-striped table-responsive table-hover"
-                    />
+                    {this.table()}
                 </div>
+
+
+
+
+
+
+
 
 
 
@@ -334,13 +452,31 @@ const mapStateProps = state => ({
     state3: state.state3,
     state4: state.state4,
     encode: state.encode,
-    loader: state.loader
+    loader: state.loader,
+    fileJson: state.fileJson,
+    table: state.table
 
 
 
 })
 
 const mapDispatchToProps = dispactch => ({
+
+    habilitarTable(e) {
+        dispactch({
+            type: "Enable_Table",
+            input: e
+        })
+
+    },
+
+    cambiarFileTable(e) {
+        dispactch({
+            type: "File_Table",
+            input: e
+        })
+
+    },
 
     cambiarFile(e, e1) {
         dispactch({
@@ -379,7 +515,7 @@ const mapDispatchToProps = dispactch => ({
     ,
     cambiarState4(e) {
         dispactch({
-            type: "Change_File4",
+            type: "Change_state4",
             state4: e
         })
 
