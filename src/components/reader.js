@@ -40,7 +40,7 @@ class Reader extends Component {
             csvData: null,
             nameFile: "",
             file: "cosota",
-            URl: "http://172.19.15.35:5000/",
+            URl: "http://172.19.15.28:5000/",
             table: false,
             numPages: null,
             pageNumber: 1
